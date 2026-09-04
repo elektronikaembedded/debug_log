@@ -1,0 +1,47 @@
+/******************************************************************************
+ * @file        debug_transport_usb_cdc.cpp.template
+ * @brief       USB CDC debug transport implementation template.
+ *
+ *              Provides a template for implementing the debug transport
+ *              using USB CDC (Virtual COM Port).
+ *
+ *              The application/platform must provide the actual USB CDC
+ *              transfer implementation.
+ *
+ * @author      Sarath S
+ * @copyright   MIT License
+ ******************************************************************************/
+ 
+#include "debug_transport.hpp"
+
+#include "usbd_cdc_if.h"
+#include "usbd_def.h"
+
+namespace debug {
+
+namespace transport {
+int usb_cdc::init() {
+  // USB stack is initialized by the application.
+  return 0;
+}
+
+int usb_cdc::deinit() { return 0; }
+
+int usb_cdc::write(const std::uint8_t *data, std::uint32_t length) {
+  if (nullptr == data) {
+    return debug::transport::error::null_pointer;
+  }
+  if (0U == length) {
+    return debug::transport::error::invalid_length;
+  }
+
+  /* Transfer the data to the correponding interface (Use vendor API)*/
+  if (USBD_OK == CDC_Transmit_FS(const_cast<std::uint8_t *>(data), length)) {
+    return static_cast<int>(length);
+  }
+
+  return debug::transport::error::transfer_error;
+}
+} // namespace transport
+
+} // namespace debug
