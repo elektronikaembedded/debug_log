@@ -20,14 +20,14 @@
 namespace debug {
 
 namespace transport {
-int usb_cdc::init() {
+int interface::init() {
   // USB stack is initialized by the application.
   return 0;
 }
 
-int usb_cdc::deinit() { return 0; }
+int interface::deinit() { return 0; }
 
-int usb_cdc::write(const std::uint8_t *data, std::uint32_t length) {
+int interface::write(const std::uint8_t *data, std::uint32_t length) {
   if (nullptr == data) {
     return debug::transport::error::null_pointer;
   }
