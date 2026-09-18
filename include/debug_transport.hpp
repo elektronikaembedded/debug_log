@@ -37,7 +37,7 @@ enum class error : int {
  * Uses the application-initialized USBCDC/UART/Putchar stack
  * for debug output.
  */
-class usb_cdc {
+class interface {
 public:
   /** Initialize the transport. */
   static error init();
