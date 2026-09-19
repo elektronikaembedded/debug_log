@@ -69,6 +69,12 @@ struct default_os {
 enum class log_level : std::uint8_t { error = 0U, warn, info, debug };
 
 /**
+ * @brief Logger application operation status messages.
+ */
+
+enum class op_status : std::uint8_t { ok = 0, failed, skipped, timeout, none};
+
+/**
  * @brief Lightweight logger.
  *
  * @tparam Transport Output transport interface.
@@ -99,8 +105,12 @@ public:
   /** Log a debug message. */
   static void debug(const char *fmt, ...);
 
+  /** Log a application operation status message. */
+  static void status(op_status status, const char *fmt, ...);
+
+
 private:
-  static void log(log_level level, const char *fmt, va_list args);
+  static void log(op_status status, log_level level, const char *fmt, va_list args);
 
   static log_level current_level;
 

@@ -79,7 +79,7 @@ void logger<Transport, Config, OS>::error(const char *fmt, ...) {
 
   va_start(args, fmt);
 
-  log(log_level::error, fmt, args);
+  log(op_status::none, log_level::error, fmt, args);
 
   va_end(args);
 }
@@ -101,7 +101,7 @@ void logger<Transport, Config, OS>::warn(const char *fmt, ...) {
 
   va_start(args, fmt);
 
-  log(log_level::warn, fmt, args);
+  log(op_status::none, log_level::warn, fmt, args);
 
   va_end(args);
 }
@@ -123,7 +123,7 @@ void logger<Transport, Config, OS>::info(const char *fmt, ...) {
 
   va_start(args, fmt);
 
-  log(log_level::info, fmt, args);
+  log(op_status::none, log_level::info, fmt, args);
 
   va_end(args);
 }
@@ -145,17 +145,59 @@ void logger<Transport, Config, OS>::debug(const char *fmt, ...) {
 
   va_start(args, fmt);
 
-  log(log_level::debug, fmt, args);
+  log(op_status::none, log_level::debug, fmt, args);
 
   va_end(args);
 }
 
-/* Log implementation */
+/* operation status */
 
 template <typename Transport, typename Config, typename OS>
-void logger<Transport, Config, OS>::log(log_level level, const char *fmt,
+void logger<Transport, Config, OS>::status(op_status status, const char *fmt, ...) {
+	if constexpr (!Config::enable) {
+	    (void)fmt;
+	    return;
+	  }
+
+	  if (nullptr == fmt) {
+	    return;
+	  }
+
+	  log_level level;
+
+	  switch(status)
+	  {
+	  case op_status::ok:
+	  case op_status::none:
+		  level = log_level::info;
+		  break;
+	  case op_status::failed:
+	  case op_status::timeout:
+		  level = log_level::error;
+		  break;
+	  case op_status::skipped:
+		  level = log_level::warn;
+		  break;
+
+	  default:
+		  break;
+
+	  }
+	  va_list args;
+
+	  va_start(args, fmt);
+
+	  log(status, level, fmt, args);
+
+	  va_end(args);
+	}
+
+/* Log implementation */
+template <typename Transport, typename Config, typename OS>
+void logger<Transport, Config, OS>::log(op_status status, log_level level, const char *fmt,
                                         va_list args) {
   if constexpr (!Config::enable) {
+	(void)status,
     (void)level;
     (void)fmt;
     (void)args;
@@ -287,6 +329,36 @@ void logger<Transport, Config, OS>::log(log_level level, const char *fmt,
         position += written;
       }
     }
+  }
+
+  /* Operation status */
+  if (status != op_status::none)
+  {
+      const char* status_name = "[OK]";
+
+      switch (status)
+      {
+      case op_status::ok:
+          status_name = "[OK]";
+          break;
+
+      case op_status::failed:
+          status_name = "[FAIL]";
+          break;
+
+      case op_status::timeout:
+          status_name = "[TIMEOUT]";
+          break;
+
+      case op_status::skipped:
+          status_name = "[SKIP]";
+          break;
+
+      default:
+          break;
+      }
+
+      append(" %s", status_name);
   }
 
   /* Line termination */
