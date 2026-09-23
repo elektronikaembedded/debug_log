@@ -1,0 +1,35 @@
+/**
+ * @file        debug_transport_usb_cdc.hpp.template
+ * @brief       USB CDC debug transport interface template.
+ *
+ *              Provides the transport interface required by the
+ *              debug logger.
+ *
+ * @author      Sarath S
+ * @copyright   MIT License
+ */
+
+#pragma once
+
+#include <cstdint>
+
+#include "debug_transport.hpp"
+
+namespace debug
+{
+namespace transport
+{
+
+class UsbCdc
+{
+public:
+    static Error init();
+
+    static Error deinit();
+
+    static Error write(const std::uint8_t* data,
+                       std::uint32_t length);
+};
+
+} // namespace transport
+} // namespace debug

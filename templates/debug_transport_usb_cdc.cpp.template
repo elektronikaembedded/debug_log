@@ -1,4 +1,4 @@
-/******************************************************************************
+/**
  * @file        debug_transport_usb_cdc.cpp.template
  * @brief       USB CDC debug transport implementation template.
  *
@@ -10,38 +10,55 @@
  *
  * @author      Sarath S
  * @copyright   MIT License
- ******************************************************************************/
- 
-#include "debug_transport.hpp"
+ */
 
-#include "usbd_cdc_if.h"
-#include "usbd_def.h"
+#include "debug_transport_usb_cdc.hpp"
 
-namespace debug {
+#include "stm32u5xx_hal.h"
 
-namespace transport {
-int interface::init() {
-  // USB stack is initialized by the application.
-  return 0;
+extern UART_HandleTypeDef huart3;
+
+namespace debug
+{
+namespace transport
+{
+
+Error UsbCdc::init()
+{
+    /* USB stack is initialized by the application. */
+    return Error::Success;
 }
 
-int interface::deinit() { return 0; }
-
-int interface::write(const std::uint8_t *data, std::uint32_t length) {
-  if (nullptr == data) {
-    return debug::transport::error::null_pointer;
-  }
-  if (0U == length) {
-    return debug::transport::error::invalid_length;
-  }
-
-  /* Transfer the data to the correponding interface (Use vendor API)*/
-  if (USBD_OK == CDC_Transmit_FS(const_cast<std::uint8_t *>(data), length)) {
-    return static_cast<int>(length);
-  }
-
-  return debug::transport::error::transfer_error;
+Error UsbCdc::deinit()
+{
+    return Error::Success;
 }
+
+Error UsbCdc::write(const std::uint8_t* data, std::uint32_t length)
+{
+    if (nullptr == data)
+    {
+        return Error::NullPointer;
+    }
+
+    if (0U == length)
+    {
+        return Error::InvalidLength;
+    }
+
+    /*
+     * Transfer data using the platform/vendor API.
+     */
+    if (HAL_OK == HAL_UART_Transmit(&huart3,
+                                    const_cast<std::uint8_t*>(data),
+                                    length,
+                                    HAL_MAX_DELAY))
+    {
+        return Error::Success;
+    }
+
+    return Error::TransferError;
+}
+
 } // namespace transport
-
 } // namespace debug
