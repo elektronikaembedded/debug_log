@@ -13,10 +13,9 @@
  */
 
 #include "debug_transport_usb_cdc.hpp"
-
+#include "usbd_cdc_if.h"
+#include "usbd_def.h"
 #include "stm32u5xx_hal.h"
-
-extern UART_HandleTypeDef huart3;
 
 namespace debug
 {
@@ -49,12 +48,9 @@ Error UsbCdc::write(const std::uint8_t* data, std::uint32_t length)
     /*
      * Transfer data using the platform/vendor API.
      */
-    if (HAL_OK == HAL_UART_Transmit(&huart3,
-                                    const_cast<std::uint8_t*>(data),
-                                    length,
-                                    HAL_MAX_DELAY))
+    if (USBD_OK == CDC_Transmit_FS(const_cast<std::uint8_t *>(data), length))
     {
-        return Error::Success;
+        return Error::Success;;
     }
 
     return Error::TransferError;

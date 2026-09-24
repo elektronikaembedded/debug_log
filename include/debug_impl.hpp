@@ -9,8 +9,7 @@
 
 #include <cstdio>
 
-namespace debug
-{
+namespace debug {
 
 /*===========================================================================
  * Static members
@@ -33,18 +32,16 @@ bool Logger<Transport, Config, Os>::initialized = false;
  *===========================================================================*/
 
 template <typename Transport, typename Config, typename Os>
-void Logger<Transport, Config, Os>::init()
-{
-    if constexpr (!Config::kEnable)
-    {
-        initialized = false;
-        return;
-    }
+void Logger<Transport, Config, Os>::init() {
+  if constexpr (!Config::kEnable) {
+    initialized = false;
+    return;
+  }
 
-    Transport::init();
-    Os::init();
+  Transport::init();
+  Os::init();
 
-    initialized = true;
+  initialized = true;
 }
 
 /*===========================================================================
@@ -52,21 +49,18 @@ void Logger<Transport, Config, Os>::init()
  *===========================================================================*/
 
 template <typename Transport, typename Config, typename Os>
-void Logger<Transport, Config, Os>::setLevel(LogLevel level)
-{
-    if constexpr (!Config::kEnable)
-    {
-        (void)level;
-        return;
-    }
+void Logger<Transport, Config, Os>::setLevel(LogLevel level) {
+  if constexpr (!Config::kEnable) {
+    (void)level;
+    return;
+  }
 
-    currentLevel = level;
+  currentLevel = level;
 }
 
 template <typename Transport, typename Config, typename Os>
-LogLevel Logger<Transport, Config, Os>::getLevel()
-{
-    return currentLevel;
+LogLevel Logger<Transport, Config, Os>::getLevel() {
+  return currentLevel;
 }
 
 /*===========================================================================
@@ -74,24 +68,21 @@ LogLevel Logger<Transport, Config, Os>::getLevel()
  *===========================================================================*/
 
 template <typename Transport, typename Config, typename Os>
-void Logger<Transport, Config, Os>::error(const char* fmt, ...)
-{
-    if constexpr (!Config::kEnable)
-    {
-        (void)fmt;
-        return;
-    }
+void Logger<Transport, Config, Os>::error(const char *fmt, ...) {
+  if constexpr (!Config::kEnable) {
+    (void)fmt;
+    return;
+  }
 
-    if (nullptr == fmt)
-    {
-        return;
-    }
+  if (nullptr == fmt) {
+    return;
+  }
 
-    va_list args;
+  va_list args;
 
-    va_start(args, fmt);
-    log(OpStatus::None, LogLevel::Error, fmt, args);
-    va_end(args);
+  va_start(args, fmt);
+  log(OpStatus::None, LogLevel::Error, fmt, args);
+  va_end(args);
 }
 
 /*===========================================================================
@@ -99,24 +90,21 @@ void Logger<Transport, Config, Os>::error(const char* fmt, ...)
  *===========================================================================*/
 
 template <typename Transport, typename Config, typename Os>
-void Logger<Transport, Config, Os>::warn(const char* fmt, ...)
-{
-    if constexpr (!Config::kEnable)
-    {
-        (void)fmt;
-        return;
-    }
+void Logger<Transport, Config, Os>::warn(const char *fmt, ...) {
+  if constexpr (!Config::kEnable) {
+    (void)fmt;
+    return;
+  }
 
-    if (nullptr == fmt)
-    {
-        return;
-    }
+  if (nullptr == fmt) {
+    return;
+  }
 
-    va_list args;
+  va_list args;
 
-    va_start(args, fmt);
-    log(OpStatus::None, LogLevel::Warn, fmt, args);
-    va_end(args);
+  va_start(args, fmt);
+  log(OpStatus::None, LogLevel::Warn, fmt, args);
+  va_end(args);
 }
 
 /*===========================================================================
@@ -124,24 +112,21 @@ void Logger<Transport, Config, Os>::warn(const char* fmt, ...)
  *===========================================================================*/
 
 template <typename Transport, typename Config, typename Os>
-void Logger<Transport, Config, Os>::info(const char* fmt, ...)
-{
-    if constexpr (!Config::kEnable)
-    {
-        (void)fmt;
-        return;
-    }
+void Logger<Transport, Config, Os>::info(const char *fmt, ...) {
+  if constexpr (!Config::kEnable) {
+    (void)fmt;
+    return;
+  }
 
-    if (nullptr == fmt)
-    {
-        return;
-    }
+  if (nullptr == fmt) {
+    return;
+  }
 
-    va_list args;
+  va_list args;
 
-    va_start(args, fmt);
-    log(OpStatus::None, LogLevel::Info, fmt, args);
-    va_end(args);
+  va_start(args, fmt);
+  log(OpStatus::None, LogLevel::Info, fmt, args);
+  va_end(args);
 }
 
 /*===========================================================================
@@ -149,24 +134,21 @@ void Logger<Transport, Config, Os>::info(const char* fmt, ...)
  *===========================================================================*/
 
 template <typename Transport, typename Config, typename Os>
-void Logger<Transport, Config, Os>::debug(const char* fmt, ...)
-{
-    if constexpr (!Config::kEnable)
-    {
-        (void)fmt;
-        return;
-    }
+void Logger<Transport, Config, Os>::debug(const char *fmt, ...) {
+  if constexpr (!Config::kEnable) {
+    (void)fmt;
+    return;
+  }
 
-    if (nullptr == fmt)
-    {
-        return;
-    }
+  if (nullptr == fmt) {
+    return;
+  }
 
-    va_list args;
+  va_list args;
 
-    va_start(args, fmt);
-    log(OpStatus::None, LogLevel::Debug, fmt, args);
-    va_end(args);
+  va_start(args, fmt);
+  log(OpStatus::None, LogLevel::Debug, fmt, args);
+  va_end(args);
 }
 
 /*===========================================================================
@@ -174,50 +156,44 @@ void Logger<Transport, Config, Os>::debug(const char* fmt, ...)
  *===========================================================================*/
 
 template <typename Transport, typename Config, typename Os>
-void Logger<Transport, Config, Os>::status(
-    OpStatus status,
-    const char* fmt,
-    ...)
-{
-    if constexpr (!Config::kEnable)
-    {
-        (void)status;
-        (void)fmt;
-        return;
-    }
+void Logger<Transport, Config, Os>::status(OpStatus status, const char *fmt,
+                                           ...) {
+  if constexpr (!Config::kEnable) {
+    (void)status;
+    (void)fmt;
+    return;
+  }
 
-    if (nullptr == fmt)
-    {
-        return;
-    }
+  if (nullptr == fmt) {
+    return;
+  }
 
-    LogLevel level = LogLevel::Info;
+  LogLevel level = LogLevel::Info;
 
-    switch (status)
-    {
-    case OpStatus::Ok:
-    case OpStatus::None:
-        level = LogLevel::Info;
-        break;
+  switch (status) {
+  case OpStatus::Ok:
+  case OpStatus::None:
+    level = LogLevel::Info;
+    break;
 
-    case OpStatus::Failed:
-    case OpStatus::Timeout:
-        level = LogLevel::Error;
-        break;
+  case OpStatus::Failed:
+  case OpStatus::Timeout:
+    level = LogLevel::Error;
+    break;
 
-    case OpStatus::Skipped:
-        level = LogLevel::Warn;
-        break;
+  case OpStatus::Skipped:
+    level = LogLevel::Warn;
+    break;
 
-    default:
-        break;
-    }
+  default:
+    break;
+  }
 
-    va_list args;
+  va_list args;
 
-    va_start(args, fmt);
-    log(status, level, fmt, args);
-    va_end(args);
+  va_start(args, fmt);
+  log(status, level, fmt, args);
+  va_end(args);
 }
 
 /*===========================================================================
@@ -225,234 +201,186 @@ void Logger<Transport, Config, Os>::status(
  *===========================================================================*/
 
 template <typename Transport, typename Config, typename Os>
-void Logger<Transport, Config, Os>::log(
-    OpStatus status,
-    LogLevel level,
-    const char* fmt,
-    va_list args)
-{
-    if constexpr (!Config::kEnable)
-    {
-        (void)status;
-        (void)level;
-        (void)fmt;
-        (void)args;
-        return;
+void Logger<Transport, Config, Os>::log(OpStatus status, LogLevel level,
+                                        const char *fmt, va_list args) {
+  if constexpr (!Config::kEnable) {
+    (void)status;
+    (void)level;
+    (void)fmt;
+    (void)args;
+    return;
+  }
+
+  if ((nullptr == fmt) || (false == initialized)) {
+    return;
+  }
+
+  /*
+   * Filter messages according to the configured level.
+   *
+   * Lower numeric value = higher priority.
+   */
+  if (static_cast<std::uint8_t>(level) >
+      static_cast<std::uint8_t>(currentLevel)) {
+    return;
+  }
+
+  /*
+   * The buffer is shared between logger calls, therefore the lock
+   * must cover both formatting and transmission.
+   */
+  Os::lock();
+
+  std::uint32_t position = 0U;
+
+  /*
+   * Helper used to append formatted data safely.
+   */
+  auto append = [&position](const char *format, auto... values) {
+    if (position >= Config::kBufferSize) {
+      return;
     }
 
-    if ((nullptr == fmt) || (false == initialized))
-    {
-        return;
+    const std::uint32_t remaining = Config::kBufferSize - position;
+
+    const int ret =
+        std::snprintf(reinterpret_cast<char *>(&Logger::buffer[position]),
+                      remaining, format, values...);
+
+    if (ret <= 0) {
+      return;
     }
 
-    /*
-     * Filter messages according to the configured level.
-     *
-     * Lower numeric value = higher priority.
-     */
-    if (static_cast<std::uint8_t>(level) >
-        static_cast<std::uint8_t>(currentLevel))
-    {
-        return;
+    const std::uint32_t written = static_cast<std::uint32_t>(ret);
+
+    if (written >= remaining) {
+      position = Config::kBufferSize - 1U;
+    } else {
+      position += written;
+    }
+  };
+
+  /* Sequence number */
+
+  if constexpr (Config::kSequenceNumber) {
+    ++sequenceNumber;
+
+    append("[%05lu]", static_cast<unsigned long>(sequenceNumber));
+  }
+
+  /* Timestamp */
+
+  if constexpr (Config::kTimeDateInfo) {
+    const std::uint32_t timestamp = Os::getTimestamp();
+
+    append("[%lu]", static_cast<unsigned long>(timestamp));
+  }
+
+  /* Thread information */
+
+  if constexpr (Config::kThreadInfo) {
+    const char *threadName = Os::getThreadName();
+
+    if (nullptr == threadName) {
+      threadName = "MAIN";
     }
 
-    /*
-     * The buffer is shared between logger calls, therefore the lock
-     * must cover both formatting and transmission.
-     */
-    Os::lock();
+    append("[%s]", threadName);
+  }
 
-    std::uint32_t position = 0U;
+  /* Log level */
 
-    /*
-     * Helper used to append formatted data safely.
-     */
-    auto append = [&position](
-        const char* format,
-        auto... values)
-    {
-        if (position >= Config::kBufferSize)
-        {
-            return;
-        }
+  const char *levelName = "LOG";
 
-        const std::uint32_t remaining =
-            Config::kBufferSize - position;
+  switch (level) {
+  case LogLevel::Error:
+    levelName = "ERROR";
+    break;
 
-        const int ret =
-            std::snprintf(
-                reinterpret_cast<char*>(&Logger::buffer[position]),
-                remaining,
-                format,
-                values...);
+  case LogLevel::Warn:
+    levelName = "WARN";
+    break;
 
-        if (ret <= 0)
-        {
-            return;
-        }
+  case LogLevel::Info:
+    levelName = "INFO";
+    break;
 
-        const std::uint32_t written =
-            static_cast<std::uint32_t>(ret);
+  case LogLevel::Debug:
+    levelName = "DEBUG";
+    break;
 
-        if (written >= remaining)
-        {
-            position = Config::kBufferSize - 1U;
-        }
-        else
-        {
-            position += written;
-        }
-    };
+  default:
+    break;
+  }
 
-    /* Sequence number */
+  if constexpr (Config::kLevelName) {
+    append("[%s] ", levelName);
+  }
 
-    if constexpr (Config::kSequenceNumber)
-    {
-        ++sequenceNumber;
+  /* User message */
 
-        append(
-            "[%05lu]",
-            static_cast<unsigned long>(sequenceNumber));
+  if (position < Config::kBufferSize) {
+    const std::uint32_t remaining = Config::kBufferSize - position;
+
+    const int ret = std::vsnprintf(reinterpret_cast<char *>(&buffer[position]),
+                                   remaining, fmt, args);
+
+    if (ret > 0) {
+      const std::uint32_t written = static_cast<std::uint32_t>(ret);
+
+      if (written >= remaining) {
+        position = Config::kBufferSize - 1U;
+      } else {
+        position += written;
+      }
     }
+  }
 
-    /* Timestamp */
+  /* Operation status */
 
-    if constexpr (Config::kTimeDateInfo)
-    {
-        const std::uint32_t timestamp =
-            Os::getTimestamp();
+  if (status != OpStatus::None) {
+    const char *statusName = "[OK]";
 
-        append(
-            "[%lu]",
-            static_cast<unsigned long>(timestamp));
-    }
+    switch (status) {
+    case OpStatus::Ok:
+      statusName = "[OK]";
+      break;
 
-    /* Thread information */
+    case OpStatus::Failed:
+      statusName = "[FAIL]";
+      break;
 
-    if constexpr (Config::kThreadInfo)
-    {
-        const char* threadName = Os::getThreadName();
+    case OpStatus::Timeout:
+      statusName = "[TIMEOUT]";
+      break;
 
-        if (nullptr == threadName)
-        {
-            threadName = "MAIN";
-        }
-
-        append("[%s]", threadName);
-    }
-
-    /* Log level */
-
-    const char* levelName = "LOG";
-
-    switch (level)
-    {
-    case LogLevel::Error:
-        levelName = "ERROR";
-        break;
-
-    case LogLevel::Warn:
-        levelName = "WARN";
-        break;
-
-    case LogLevel::Info:
-        levelName = "INFO";
-        break;
-
-    case LogLevel::Debug:
-        levelName = "DEBUG";
-        break;
+    case OpStatus::Skipped:
+      statusName = "[SKIP]";
+      break;
 
     default:
-        break;
+      break;
     }
 
-    if constexpr (Config::kLevelName)
-    {
-        append("[%s] ", levelName);
-    }
+    append(" %s", statusName);
+  }
 
-    /* User message */
+  /* Line termination */
 
-    if (position < Config::kBufferSize)
-    {
-        const std::uint32_t remaining =
-            Config::kBufferSize - position;
+  if (position + 2U < Config::kBufferSize) {
+    buffer[position++] = '\r';
+    buffer[position++] = '\n';
+    buffer[position] = '\0';
+  } else if (Config::kBufferSize > 1U) {
+    buffer[Config::kBufferSize - 2U] = '\r';
+    buffer[Config::kBufferSize - 1U] = '\n';
+  }
 
-        const int ret =
-            std::vsnprintf(
-                reinterpret_cast<char*>(&buffer[position]),
-                remaining,
-                fmt,
-                args);
+  /* Write the data to the transport layer */
 
-        if (ret > 0)
-        {
-            const std::uint32_t written =
-                static_cast<std::uint32_t>(ret);
+  Transport::write(buffer, position);
 
-            if (written >= remaining)
-            {
-                position = Config::kBufferSize - 1U;
-            }
-            else
-            {
-                position += written;
-            }
-        }
-    }
-
-    /* Operation status */
-
-    if (status != OpStatus::None)
-    {
-        const char* statusName = "[OK]";
-
-        switch (status)
-        {
-        case OpStatus::Ok:
-            statusName = "[OK]";
-            break;
-
-        case OpStatus::Failed:
-            statusName = "[FAIL]";
-            break;
-
-        case OpStatus::Timeout:
-            statusName = "[TIMEOUT]";
-            break;
-
-        case OpStatus::Skipped:
-            statusName = "[SKIP]";
-            break;
-
-        default:
-            break;
-        }
-
-        append(" %s", statusName);
-    }
-
-    /* Line termination */
-
-    if (position + 2U < Config::kBufferSize)
-    {
-        buffer[position++] = '\r';
-        buffer[position++] = '\n';
-        buffer[position] = '\0';
-    }
-    else if (Config::kBufferSize > 1U)
-    {
-        buffer[Config::kBufferSize - 2U] = '\r';
-        buffer[Config::kBufferSize - 1U] = '\n';
-    }
-
-    /* Write the data to the transport layer */
-
-    Transport::write(buffer, position);
-
-    Os::unlock();
+  Os::unlock();
 }
 
 } // namespace debug
-
